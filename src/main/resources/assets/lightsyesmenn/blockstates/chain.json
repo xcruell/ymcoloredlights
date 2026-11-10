@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "lightsyesmenn:block/chain",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "lightsyesmenn:block/chain"
+    },
+    "axis=z": {
+      "model": "lightsyesmenn:block/chain",
+      "x": 90
+    }
+  }
+}

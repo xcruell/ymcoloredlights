@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "N N",
+    "III",
+    "GCG"
+  ],
+  "key": {
+    "N": {
+      "item": "lightsyesmenn:chain"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "G": {
+      "item": "minecraft:glass_pane"
+    },
+    "C": {
+      "item": "lightsyesmenn:colored_light"
+    }
+  },
+  "result": {
+    "id": "lightsyesmenn:fluorescent_lamp_hanging",
+    "count": 1
+  }
+}
