@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "ymcoloredlights",
+  "version": "${version}",
+  "name": "YM Colored Lights",
+  "description": "Standalone colored lights from YesMenn!, including colored blocks, tubes, panels, spotlights, invisible spotlights, a colorful flashlight, live configuration, and Veil-powered rendering.",
+  "authors": ["xcruell", "YesMenn!"],
+  "license": "YesMenn Custom License 1.0",
+
+  "environment": "*",
+
+  "entrypoints": {
+    "main": [
+      "com.yesmenn.coloredlights.YMColoredLightsFabric"
+    ],
+    "client": [
+      "com.yesmenn.coloredlights.client.YMColoredLightsFabricClient"
+    ],
+    "modmenu": [
+      "com.yesmenn.coloredlights.client.YMColoredLightsModMenu"
+    ]
+  },
+
+  "accessWidener": "ymcoloredlights.accesswidener",
+
+  "mixins": [
+    "ymcoloredlights.mixins.json",
+    "ymcoloredlights.mixins.fabric.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "ymducttape": ">=0.1.1",
+    "minecraft": "1.21.1",
+    "veil": ">=4.5.2"
+  },
+
+  "suggests": {
+    "modmenu": "*",
+    "ymvilc": ">=1.7.0"
+  },
+
+  "custom": {
+    "yesmenn_tab": true
+  }
+}

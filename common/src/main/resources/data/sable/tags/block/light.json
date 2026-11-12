@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "ymcoloredlights:colored_light",
+    "ymcoloredlights:colored_light_tube",
+    "ymcoloredlights:colored_light_panel",
+    "ymcoloredlights:colored_light_spotlight",
+    "ymcoloredlights:invisible_colored_light_spotlight",
+    "ymcoloredlights:hanging_lamp",
+    "ymcoloredlights:fluorescent_lamp",
+    "ymcoloredlights:fluorescent_lamp_hanging"
+  ]
+}

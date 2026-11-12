@@ -1,0 +1,110 @@
+plugins {
+    id 'dev.architectury.loom'
+}
+
+base {
+    archivesName = archives_base_name + '-neoforge'
+}
+
+loom {
+    mixin {
+        useLegacyMixinAp = true
+        defaultRefmapName = 'ymcoloredlights-refmap.json'
+    }
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+        }
+        configureEach {
+            property 'forge.logging.markers', ''
+        }
+    }
+}
+
+configurations {
+    directRunMod  // JARs copied directly to run/mods (bypass Loom remapping)
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    neoForge "net.neoforged:neoforge:${neo_version}"
+    mappings loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${parchment_minecraft_version}:${parchment_mappings_version}@zip")
+    }
+
+    modCompileOnly("foundry.veil:veil-neoforge-${minecraft_version}:${veil_version}") {
+        exclude group: 'maven.modrinth'
+        exclude group: 'me.fallenbreath'
+    }
+    // YM Duct Tape (creative tab, YM GUI kit), required mod; the jar is kept in libs/ (copied to run/mods for runs)
+    modCompileOnly fileTree('../libs') { include 'ymducttape-v*-neoforge-*.jar'; exclude '*-dev.jar' }
+
+    // Loom strips META-INF/jarjar/metadata.json when remapping, so Veil's bundled libraries would not load.
+    // The original JAR is copied to run/mods instead (see multi-conv.md in the VILC project, problem 3).
+    directRunMod("foundry.veil:veil-neoforge-${minecraft_version}:${veil_version}") {
+        exclude group: 'maven.modrinth'
+        exclude group: 'me.fallenbreath'
+        transitive = false
+    }
+}
+
+def generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
+    def replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from 'src/main/templates'
+    into 'build/generated/sources/modMetadata'
+}
+
+// The common sources are compiled here: FML only loads classes from the mod's own module (the classpath entries
+// next to neoforge.mods.toml), so a separate common JAR would be invisible to it.
+sourceSets.main.java.srcDir project(':common').sourceSets.main.java.srcDirs
+sourceSets.main.resources.srcDir generateModMetadata
+
+// Copies the directRunMod JARs to run/mods before each run; old JARs are removed first.
+tasks.register('syncRunMods') {
+    doLast {
+        def modsDir = project.file('run/mods')
+        modsDir.mkdirs()
+        modsDir.listFiles { f -> f.name.endsWith('.jar') }?.each { it.delete() }
+        project.copy {
+            from configurations.directRunMod
+            // YM Duct Tape (shared YesMenn! creative tab), required mod; the jar is kept in libs/
+            from(rootProject.fileTree('libs')) { include 'ymducttape-v*-neoforge-*.jar'; exclude '*-dev.jar' }
+            into modsDir
+        }
+    }
+}
+
+tasks.matching { it.name in ['runClient', 'runServer'] }.configureEach {
+    dependsOn 'syncRunMods'
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    from project(':common').sourceSets.main.resources
+    from(rootProject.file('LICENSE')) {
+        into 'META-INF'
+    }
+}
+
+// Jar names: <name>-v<version>-<loader>-<minecraft version>.jar
+remapJar {
+    archiveFileName = "${archives_base_name}-v${project.version}-neoforge-${minecraft_version}.jar"
+}
+
+jar {
+    archiveFileName = "${archives_base_name}-v${project.version}-neoforge-${minecraft_version}-dev.jar"
+}

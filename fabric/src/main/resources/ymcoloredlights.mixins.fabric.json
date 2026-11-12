@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.yesmenn.coloredlights.mixin.fabric",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "MixinSpawnPlacementsFabric"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

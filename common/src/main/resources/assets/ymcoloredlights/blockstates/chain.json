@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "ymcoloredlights:block/chain",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "ymcoloredlights:block/chain"
+    },
+    "axis=z": {
+      "model": "ymcoloredlights:block/chain",
+      "x": 90
+    }
+  }
+}
